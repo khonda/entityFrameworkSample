@@ -1,0 +1,65 @@
+﻿<Window x:Class="EntityFrameworkSample.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+        xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
+        xmlns:v="clr-namespace:EntityFrameworkSample.Views"
+        xmlns:vm="clr-namespace:EntityFrameworkSample.ViewModels"
+        Title="MainWindow" Height="350" Width="525">
+    
+    <Window.DataContext>
+        <vm:MainWindowViewModel/>
+    </Window.DataContext>
+    
+    <i:Interaction.Triggers>
+
+        <l:InteractionMessageTrigger MessageKey="Error" Messenger="{Binding Messenger}">
+            <l:InformationDialogInteractionMessageAction/>
+        </l:InteractionMessageTrigger>
+
+        <!--Viewに特別な要件が存在しない限りは、トリガーやアクションの自作にこだわらず積極的にコードビハインドを使いましょう -->
+    	<!--Viewのコードビハインドは、基本的にView内で完結するロジックとViewModelからのイベントの受信(専用リスナを使用する)に限るとトラブルが少なくなります -->
+    	<!--Livet1.1からはコードビハインドでViewModelのイベントを受信するためのWeakEventLisnterサポートが追加されています --> 
+        
+        <!--WindowのContentRenderedイベントのタイミングでViewModelのInitializeメソッドが呼ばれます-->
+        <i:EventTrigger EventName="ContentRendered">
+            <l:LivetCallMethodAction MethodTarget="{Binding}" MethodName="Initialize"/>
+        </i:EventTrigger>
+
+        <!--Windowが閉じたタイミングでViewModelのDisposeメソッドが呼ばれます-->
+        <i:EventTrigger EventName="Closed">
+            <l:DataContextDisposeAction/>
+        </i:EventTrigger>
+
+        <!--WindowのCloseキャンセル処理に対応する場合は、WindowCloseCancelBehaviorの使用を検討してください-->
+
+    </i:Interaction.Triggers>
+    
+    <Grid>
+        <DataGrid AutoGenerateColumns="False" Height="277" HorizontalAlignment="Left" Margin="23,12,0,0" Name="dataGrid1" VerticalAlignment="Top" Width="296" ItemsSource="{Binding Employees, Mode=OneWay}" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Code}" Header="Code" />
+                <DataGridTextColumn Binding="{Binding Name}" Header="Name" />
+                <DataGridTextColumn Binding="{Binding MailAddress}" Header="Mail" />
+                <DataGridTextColumn Binding="{Binding DepartmentName}" Header="Department" />
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="削除" Command="{Binding RelativeSource={RelativeSource AncestorType=DataGrid},Path=DataContext.DeleteCommand}" CommandParameter="{Binding Code}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button Content="追加" Height="23" HorizontalAlignment="Left" Margin="416,266,0,0" Name="button1" VerticalAlignment="Top" Width="75" Command="{Binding InsertCommand}" />
+        <TextBox Height="24" HorizontalAlignment="Left" Margin="345,53,0,0" Name="textBox1" VerticalAlignment="Top" Width="120" Text="{Binding InputCode}" />
+        <TextBox Height="24" HorizontalAlignment="Left" Margin="345,106,0,0" Name="textBox2" VerticalAlignment="Top" Width="120" Text="{Binding InputName}" />
+        <TextBox Height="24" HorizontalAlignment="Left" Margin="345,161,0,0" Name="textBox3" VerticalAlignment="Top" Width="120" Text="{Binding InputMail}" />
+        <ComboBox Height="24" HorizontalAlignment="Left" Margin="345,217,0,0" Name="comboBox1" VerticalAlignment="Top" Width="120" ItemsSource="{Binding Departments}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding InputDepartmentCode}" SelectedIndex="0" />
+        <Label Content="Code" Height="28" HorizontalAlignment="Left" Margin="345,29,0,0" Name="label1" VerticalAlignment="Top" />
+        <Label Content="Name" Height="28" HorizontalAlignment="Left" Margin="345,83,0,0" Name="label2" VerticalAlignment="Top" />
+        <Label Content="MailAddress" Height="28" HorizontalAlignment="Left" Margin="345,136,0,0" Name="label3" VerticalAlignment="Top" />
+        <Label Content="Department" Height="28" HorizontalAlignment="Left" Margin="345,191,0,0" Name="label4" VerticalAlignment="Top" />
+    </Grid>
+</Window>

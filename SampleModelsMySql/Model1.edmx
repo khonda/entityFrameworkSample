@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="samplemodelsModel.Store" Alias="Self" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.6" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="samplemodelsModelStoreContainer">
+          <EntitySet Name="department" EntityType="samplemodelsModel.Store.department" store:Type="Tables" Schema="samplemodels" />
+          <EntitySet Name="employee" EntityType="samplemodelsModel.Store.employee" store:Type="Tables" Schema="samplemodels" />
+          <AssociationSet Name="fk_employee_department" Association="samplemodelsModel.Store.fk_employee_department">
+            <End Role="department" EntitySet="department" />
+            <End Role="employee" EntitySet="employee" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="department">
+          <Key>
+            <PropertyRef Name="idDepartment" />
+          </Key>
+          <Property Name="idDepartment" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Code" Type="varchar" MaxLength="45" />
+          <Property Name="Name" Type="varchar" MaxLength="45" />
+        </EntityType>
+        <EntityType Name="employee">
+          <Key>
+            <PropertyRef Name="idEmployee" />
+            <PropertyRef Name="department_idDepartment" />
+          </Key>
+          <Property Name="idEmployee" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Code" Type="varchar" MaxLength="45" />
+          <Property Name="Name" Type="varchar" MaxLength="45" />
+          <Property Name="MailAddress" Type="varchar" MaxLength="45" />
+          <Property Name="department_idDepartment" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="fk_employee_department">
+          <End Role="department" Type="samplemodelsModel.Store.department" Multiplicity="1" />
+          <End Role="employee" Type="samplemodelsModel.Store.employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="department">
+              <PropertyRef Name="idDepartment" />
+            </Principal>
+            <Dependent Role="employee">
+              <PropertyRef Name="department_idDepartment" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="samplemodelsModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="samplemodelsEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="department" EntityType="samplemodelsModel.department" />
+          <EntitySet Name="employee" EntityType="samplemodelsModel.employee" />
+          <AssociationSet Name="fk_employee_department" Association="samplemodelsModel.fk_employee_department">
+            <End Role="department" EntitySet="department" />
+            <End Role="employee" EntitySet="employee" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="department">
+          <Key>
+            <PropertyRef Name="idDepartment" />
+          </Key>
+          <Property Name="idDepartment" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Code" Type="String" MaxLength="45" Unicode="false" FixedLength="false" />
+          <Property Name="Name" Type="String" MaxLength="45" Unicode="false" FixedLength="false" />
+          <NavigationProperty Name="employee" Relationship="samplemodelsModel.fk_employee_department" FromRole="department" ToRole="employee" />
+        </EntityType>
+        <EntityType Name="employee">
+          <Key>
+            <PropertyRef Name="idEmployee" />
+            <PropertyRef Name="department_idDepartment" />
+          </Key>
+          <Property Name="idEmployee" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Code" Type="String" MaxLength="45" Unicode="false" FixedLength="false" />
+          <Property Name="Name" Type="String" MaxLength="45" Unicode="false" FixedLength="false" />
+          <Property Name="MailAddress" Type="String" MaxLength="45" Unicode="false" FixedLength="false" />
+          <Property Type="Int32" Name="department_idDepartment" Nullable="false" />
+          <NavigationProperty Name="department" Relationship="samplemodelsModel.fk_employee_department" FromRole="employee" ToRole="department" />
+        </EntityType>
+        <Association Name="fk_employee_department">
+          <End Type="samplemodelsModel.department" Role="department" Multiplicity="1" />
+          <End Type="samplemodelsModel.employee" Role="employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="department">
+              <PropertyRef Name="idDepartment" />
+            </Principal>
+            <Dependent Role="employee">
+              <PropertyRef Name="department_idDepartment" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="samplemodelsModelStoreContainer" CdmEntityContainer="samplemodelsEntities">
+          <EntitySetMapping Name="department">
+            <EntityTypeMapping TypeName="samplemodelsModel.department">
+              <MappingFragment StoreEntitySet="department">
+                <ScalarProperty Name="idDepartment" ColumnName="idDepartment" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="employee">
+            <EntityTypeMapping TypeName="samplemodelsModel.employee">
+              <MappingFragment StoreEntitySet="employee">
+                <ScalarProperty Name="department_idDepartment" ColumnName="department_idDepartment" />
+                <ScalarProperty Name="idEmployee" ColumnName="idEmployee" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="MailAddress" ColumnName="MailAddress" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="なし" />
+        <DesignerProperty Name="DDLGenerationTemplate" Value="$(VSEFTools)\DBGen\SSDLToMySQL.tt" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram Name="Model1">
+        <EntityTypeShape EntityType="samplemodelsModel.department" Width="1.5" PointX="0.75" PointY="0.75" Height="1.723125" IsExpanded="true" />
+        <EntityTypeShape EntityType="samplemodelsModel.employee" Width="1.5" PointX="2.75" PointY="0.75" Height="1.9366666666666674" IsExpanded="true" />
+        <AssociationConnector Association="samplemodelsModel.fk_employee_department" >
+          <ConnectorPoint PointX="2.25" PointY="1.7183333333333337" />
+          <ConnectorPoint PointX="2.75" PointY="1.7183333333333337" />
+        </AssociationConnector>
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>
